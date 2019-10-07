@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <title>Matrizes de Transformação Geométrica</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+    <!-- <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/4.0.2/bootstrap-material-design.min.css" /> -->
+    <link rel="stylesheet" href="estilizacao.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/dracula.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/github.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/languages/javascript.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script>
+</head>
+
+<body>
+    <p style=""><strong>PLANO QUALQUER:</strong></p>
+    <div id="coordiv" onmousemove="cnvs_getCoordinates(event)" onmouseout="cnvs_clearCoordinates()"></div>
+    <div class="painel">
+        <div id="get-pontos"></div>
+        <fieldset>
+            <legend>ROTAÇÃO</legend>
+        </fieldset>
+        <fieldset>
+            <legend>TRANSLAÇÃO</legend>
+        </fieldset>
+        <fieldset>
+            <legend>CISALHAMENTO</legend>
+        </fieldset>
+        <fieldset>
+            <legend>REFLEXÃO EM X</legend>
+            <button id="calcular">Aplicar</button>
+        </fieldset>
+        <fieldset>
+            <legend>REFLEXÃO EM Y</legend>
+        </fieldset>
+        <fieldset>
+            <legend>REFLEXÃO ORIGEM</legend>
+        </fieldset>
+        <fieldset>
+            <legend>REDUZIR/AUMENTAR</legend>
+            <input type="range" id="reduzir-aumentar" />
+        </fieldset>
+    </div>
+    <div class="codigo">
+        <pre><code class="javascript"></code></pre>
+    </div>
+    <div id="chartContainer" style="height: 370px; width: 40%;float:left;"></div>
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    <script src="funcoes.js"></script>
+
+</html>
