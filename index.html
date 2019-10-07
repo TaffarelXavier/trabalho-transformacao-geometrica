@@ -1,56 +1,224 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
-<head>
+  <head>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
     <title>Matrizes de Transformação Geométrica</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
-    <!-- <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/4.0.2/bootstrap-material-design.min.css" /> -->
-    <link rel="stylesheet" href="estilizacao.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/dracula.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/github.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/languages/javascript.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/4.0.2/bootstrap-material-design.min.css"
+    />
+    <link rel="stylesheet" href="assets/css/estilizacao.css" />
+    <link rel="stylesheet" href="assets/css/dracula.min.css" />
+    <link rel="stylesheet" href="assets/css/github.min.css" />
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm">
+          <h1 class="titulo-trabalho">TÍTULO DO TRABALHO DE VOCÊS</h1>
+        </div>
+      </div>
+      <hr />
+      <div class="row">
+        <div class="col-sm-5" style="border:0px solid red;">
+          <div class="row">
+            <div class="col-sm">
+              <p>
+                <strong
+                  >PLANO QUALQUER:<sup
+                    ><mark>Clique sobre o plano</mark></sup
+                  ></strong
+                >
+              </p>
+              <div
+                id="coordiv"
+                onmousemove="cnvs_getCoordinates(event)"
+                onmouseout="cnvs_clearCoordinates()"
+              ></div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm">
+              <div
+                id="chartContainer"
+                style="height: 370px; width: 100%;"
+              ></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="painel">
+            <div id="get-pontos"></div>
+            <strong>OPÇÕES:</strong>
+            <fieldset>
+              <legend>ROTAÇÃO</legend>
+              <input
+                type="range"
+                min="-100"
+                max="100"
+                id="rotacao"
+                list="tickmarks"
+              />
+              <datalist id="tickmarks">
+                <option value="0"> </option>
+                <option value="-100"> </option>
+                <option value="-90"> </option>
+                <option value="-80"> </option>
+                <option value="-70"> </option>
+                <option value="-60"> </option>
+                <option value="-50"> </option>
+                <option value="-40"> </option>
+                <option value="-30"> </option>
+                <option value="-20"> </option>
+                <option value="-10"> </option>
+                <option value="10"> </option>
+                <option value="20"> </option>
+                <option value="30"> </option>
+                <option value="40"> </option>
+                <option value="50"> </option>
+                <option value="60"> </option>
+                <option value="70"> </option>
+                <option value="80"> </option>
+                <option value="90"> </option>
+                <option value="100"> </option>
+              </datalist>
+
+              <!--REFERÊNCIA: https://developer.mozilla.org/pt-BR/docs/Web/HTML/Element/Input/range-->
+            </fieldset>
+            <fieldset>
+              <legend>TRANSLAÇÃO</legend>
+              <input
+                type="range"
+                min="-10"
+                max="10"
+                step="1"
+                id="translacao"
+              />
+            </fieldset>
+            <fieldset>
+              <legend>CISALHAMENTO</legend>
+              <input
+                type="range"
+                min="-100"
+                max="100"
+                id="cisalhamento"
+              />
+            </fieldset>
+            <fieldset>
+              <legend>REFLEXÃO EM X</legend>
+              <button id="calcular">Aplicar</button>
+            </fieldset>
+            <fieldset>
+              <legend>REFLEXÃO EM Y</legend>
+              DESENVOLVIDO, MAS NÃO IMPLEMENTADO
+            </fieldset>
+            <fieldset>
+              <legend>REFLEXÃO ORIGEM</legend>
+              DESENVOLVIDO, MAS NÃO IMPLEMENTADO
+            </fieldset>
+            <fieldset>
+              <legend>REDUZIR/AUMENTAR</legend>
+              <input type="range" id="reduzir-aumentar" />
+            </fieldset>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="codigo">
+            <pre><code class="javascript">         
+//Pega uma matriz de ponto, por exemplo: x e y
+//e multiplica por uma outra matriz e retorna uma nova
+//coordenada
+function projecaoDePonto(ponto, _matriz) {
+ let x = Math.round(ponto[0] * _matriz[0][0] + ponto[1] * _matriz[0][1]);
+
+ let y = Math.round(ponto[0] * _matriz[1][0] + ponto[1] * _matriz[1][1]);
+
+ return { x, y };
+}
+
+/**
+@ponto uma matriz de coordenadas
+ Matriz de rotação
+**/
+function rotacao(ponto, angulo) {
+ //A conversão é necessária,
+ //pois as funções cos e sin, de javascript
+ //retorna em radianos
+ let alfa = (angulo * Math.PI) / 180;
+
+ let matrizRotacao = [
+   [Math.cos(alfa), -Math.sin(alfa)],
+   [Math.sin(alfa), Math.cos(alfa)]
+ ];
+
+ return projecaoDePonto(ponto, matrizRotacao);
+}
+
+/**
+*
+* */
+function translacao(pontoinicial, matriz) {
+ let x = pontoinicial[0] + matriz[0];
+
+ let y = pontoinicial[1] + matriz[1];
+
+ return { x: x, y: y };
+}
+
+/**
+* Para testar no geogebra: A = {{1,2},{0,1} }
+* */
+function cisalhamento(ponto, a) {
+ return projecaoDePonto(ponto, [[1, a], [0, 1]]);
+}
+
+/**
+*
+* @param {*} ponto
+*/
+function reflexaoEmX(ponto) {
+ return projecaoDePonto(ponto, [[1, 0], [0, -1]]);
+}
+
+/**
+*
+* */
+function reflexaoEmY(ponto) {
+ return projecaoDePonto(ponto, [[-1, 0], [0, 1]]);
+}
+
+/**
+*
+*/
+function reflexaoOrigem(ponto) {
+ return projecaoDePonto(ponto, [[-1, 0], [0, -1]]);
+}
+
+/**
+*
+* */
+function escalamento(ponto, a, b) {
+ return projecaoDePonto(ponto, [[a, 0], [0, b]]);
+}
+            </code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/highlight.min.js"></script>
+    <script src="assets/js/javascript.min.js"></script>
+    <script src="/assets/js/canvasjs.min.js"></script>
+    <script src="assets/js/funcoes.js"></script>
     <script>
-        hljs.initHighlightingOnLoad();
+      hljs.initHighlightingOnLoad();
     </script>
-</head>
-
-<body>
-    <p style=""><strong>PLANO QUALQUER:</strong></p>
-    <div id="coordiv" onmousemove="cnvs_getCoordinates(event)" onmouseout="cnvs_clearCoordinates()"></div>
-    <div class="painel">
-        <div id="get-pontos"></div>
-        <fieldset>
-            <legend>ROTAÇÃO</legend>
-        </fieldset>
-        <fieldset>
-            <legend>TRANSLAÇÃO</legend>
-        </fieldset>
-        <fieldset>
-            <legend>CISALHAMENTO</legend>
-        </fieldset>
-        <fieldset>
-            <legend>REFLEXÃO EM X</legend>
-            <button id="calcular">Aplicar</button>
-        </fieldset>
-        <fieldset>
-            <legend>REFLEXÃO EM Y</legend>
-        </fieldset>
-        <fieldset>
-            <legend>REFLEXÃO ORIGEM</legend>
-        </fieldset>
-        <fieldset>
-            <legend>REDUZIR/AUMENTAR</legend>
-            <input type="range" id="reduzir-aumentar" />
-        </fieldset>
-    </div>
-    <div class="codigo">
-        <pre><code class="javascript"></code></pre>
-    </div>
-    <div id="chartContainer" style="height: 370px; width: 40%;float:left;"></div>
-    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-    <script src="funcoes.js"></script>
-
+  </body>
 </html>
