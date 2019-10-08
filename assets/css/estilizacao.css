@@ -34,13 +34,16 @@ p {
   top: -0.2rem;
   left: -0.2rem;
   border-radius: 100%;
-  -webkit-box-shadow: 0 0 0 5px hsla(0, 0%, 100%, 0.5);
-  box-shadow: 0 0 0 5px hsla(0, 0%, 100%, 0.5);
+  -webkit-box-shadow: 0 0 0 5px hsla(0, 0%, 100%, 0.8);
+  box-shadow: 0 0 0 5px hsla(0, 0%, 100%, 0.8);
   z-index: 1;
   background-color: #98bf49;
 }
 #get-coordenadas {
   font-size: 12px;
+  background: rgba(0, 0, 0, 0.5);
+  color:white;
+  padding:5px;
 }
 
 .painel {

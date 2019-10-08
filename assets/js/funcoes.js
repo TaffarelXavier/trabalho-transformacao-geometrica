@@ -1,11 +1,20 @@
-let btnNotacao = document.getElementById("rotacao");
-let btnTranslacao = document.getElementById("translacao");
-let btnCisalhamento = document.getElementById("cisalhamento");
-let btnLimparPlano = document.getElementById("limpar-plano");
-let btnReflexaoEmY = document.getElementById("reflexao-em-y");
-let btnReflexaoOrigem = document.getElementById("reflexao-origem");
+var btnNotacao = document.getElementById("rotacao");
+var btnTranslacao = document.getElementById("translacao");
+var btnCisalhamento = document.getElementById("cisalhamento");
+var btnLimparPlano = document.getElementById("limpar-plano");
+var btnReflexaoEmY = document.getElementById("reflexao-em-y");
+var btnReflexaoOrigem = document.getElementById("reflexao-origem");
+var plano = document.getElementById("coordiv");
+var canvas = document.getElementById("canvas");
+var ctx = canvas.getContext("2d");
+
+
+//Criamos esta matriz para armazenar os pontos, quando se clica no plano,
+//automaticamente, é adicionado um elemento com as coordenadas x e y nesta matriz
+const matriz = [];
 
 /**
+ * Plugin usado somente para visualização do
  * Configurações Iniciais do Chats
  */
 var obj = {
@@ -29,10 +38,9 @@ var obj = {
   ]
 };
 
-//Criei esta matriz para armazenar os pontos, quando se clica no plano
-const matriz = [];
-
 //Para se trabalhar com pontos:
+//Cria-se uma matriz de letras com a função split
+//Reverse é para revetir a matriz, começando assim Com a e não 'Z'
 const alfabeto = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").reverse();
 
 /**
@@ -53,7 +61,8 @@ function cnvs_getCoordinates(ev) {
   document.title = "Coordenadas: (" + x + "," + y + ")";
 }
 
-//Ao tirar o mouse de cima do plano
+//Ao tirar o mouse de cima do plano, define
+//os valores iniciais
 function cnvs_clearCoordinates() {
   document.title = "Matrizes de Transformação Geométrica";
   $("#get-coordenadas")
@@ -61,9 +70,9 @@ function cnvs_clearCoordinates() {
     .hide();
 }
 
-//Pega uma matriz de ponto, por exemplo: x e y
-//e multiplica por uma outra matriz e retorna uma nova
-//coordenada
+/*Pega uma matriz de ponto, por exemplo: x e y
+e multiplica por uma outra matriz e retorna uma nova
+coordenada*/
 function projecaoDePonto(ponto, _matriz) {
   let x = Math.round(ponto[0] * _matriz[0][0] + ponto[1] * _matriz[0][1]);
 
@@ -73,13 +82,13 @@ function projecaoDePonto(ponto, _matriz) {
 }
 
 /**
-        @ponto uma matriz de coordenadas
-        Matriz de rotação
-        **/
+@ponto uma matriz de coordenadas
+Matriz de rotação
+**/
 function rotacao(ponto, angulo) {
   //A conversão é necessária,
-  //pois as funções cos e sin de javascript
-  //são retornadas em radianos
+  //pois a saída das as funções cos e sin de javascript
+  //retorna o dado em radianos
   let alfa = (angulo * Math.PI) / 180;
 
   let matrizRotacao = [
@@ -91,7 +100,7 @@ function rotacao(ponto, angulo) {
 }
 
 /**
- *
+ *Função para translação de ponto.
  * */
 function translacao(pontoinicial, matriz) {
   let x = pontoinicial[0] + matriz[0];
@@ -109,7 +118,7 @@ function cisalhamento(ponto, a) {
 }
 
 /**
- *
+ *Função para reflexão em X
  * @param {*} ponto
  */
 function reflexaoEmX(ponto) {
@@ -117,27 +126,28 @@ function reflexaoEmX(ponto) {
 }
 
 /**
- *
+ *Função para reflexão em Y
  * */
 function reflexaoEmY(ponto) {
   return projecaoDePonto(ponto, [[-1, 0], [0, 1]]);
 }
 
 /**
- *
+ *Função para reflexão Origem
  */
 function reflexaoOrigem(ponto) {
   return projecaoDePonto(ponto, [[-1, 0], [0, -1]]);
 }
 
 /**
- *
+ *Função para escalamento
  * */
 function escalamento(ponto, a, b) {
   return projecaoDePonto(ponto, [[a, 0], [0, b]]);
 }
 
-document.getElementById("coordiv").onclick = function(ev) {
+//Aqui, ao clicar sobre o plano, um ponto é adicionado a ele.
+document.getElementById("coordiv").onclick = function (ev) {
   //Retira o último elemento da matriz:
   let letraPonto = alfabeto.pop();
 
@@ -158,17 +168,21 @@ document.getElementById("coordiv").onclick = function(ev) {
   //$('#get-pontos').append("PONTO: ").append(`${letraPonto}[${x},${y}]<br/>`);
 };
 
+
 let buttonCalcular = document.getElementById("calcular");
-buttonCalcular.onclick = function() {
+
+buttonCalcular.onclick = function () {
+
   for (let { x, y } of matriz) {
     let coord = escalamento([x, y], 5, 5);
     console.log(coord);
     obj.data[0].dataPoints.push({ x: coord.x, y: coord.y });
   }
 };
+
 //Quando soltar o mouse
-buttonCalcular.onmouseup = function() {
-  setTimeout(function() {
+buttonCalcular.onmouseup = function () {
+  setTimeout(function () {
     console.log(obj);
     var chart = new CanvasJS.Chart("chartContainer", obj);
     chart.render();
@@ -177,7 +191,7 @@ buttonCalcular.onmouseup = function() {
 
 let iniciar = false;
 
-document.getElementById("reduzir-aumentar").oninput = function() {
+document.getElementById("reduzir-aumentar").oninput = function () {
   let valor = this.value;
 
   for (let { x, y } of matriz) {
@@ -194,14 +208,14 @@ document.getElementById("reduzir-aumentar").oninput = function() {
   }
 };
 
-document.getElementById("reduzir-aumentar").onmouseup = function() {
+document.getElementById("reduzir-aumentar").onmouseup = function () {
   iniciar = true;
   var chart = new CanvasJS.Chart("chartContainer", obj);
   chart.render();
 };
 
 //Para rotação:
-btnNotacao.oninput = function() {
+btnNotacao.oninput = function () {
   let angulo = this.value;
   console.log(angulo);
   for (let { x, y } of matriz) {
@@ -210,15 +224,15 @@ btnNotacao.oninput = function() {
   }
 };
 
-btnNotacao.onmouseup = function() {
-  setTimeout(function() {
+btnNotacao.onmouseup = function () {
+  setTimeout(function () {
     var chart = new CanvasJS.Chart("chartContainer", obj);
     chart.render();
   }, 1000); //Espera-se um atraso de 1 segundo(1000 milésimo).
 };
 
 //Para translação:
-btnTranslacao.onmouseup = function() {
+btnTranslacao.onmouseup = function () {
   let angulo = this.value;
   for (let { x, y } of matriz) {
     console.log(x, y);
@@ -226,14 +240,14 @@ btnTranslacao.onmouseup = function() {
     obj.data[0].dataPoints.push({ x: coordenadas.x, y: coordenadas.y });
   }
 
-  setTimeout(function() {
+  setTimeout(function () {
     var chart = new CanvasJS.Chart("chartContainer", obj);
     chart.render();
   }, 1000); //Espera-se um atraso de 1 segundo(1000 milésimo).
 };
 
 //btnCisalhamento:
-btnCisalhamento.onmouseup = function() {
+btnCisalhamento.onmouseup = function () {
   let valor = this.value;
 
   for (let { x, y } of matriz) {
@@ -249,7 +263,7 @@ btnCisalhamento.onmouseup = function() {
 */
 };
 
-$("#limpar-plano").click(function() {
+$("#limpar-plano").click(function () {
   $(".ponto-plano").remove();
   matriz = null;
   obj.data[0].dataPoints = null;
@@ -257,20 +271,20 @@ $("#limpar-plano").click(function() {
   chart.render();
 });
 
-$("#reflexao-em-y").click(function() {
+$("#reflexao-em-y").click(function () {
   for (let { x, y } of matriz) {
     let coordenadas = reflexaoEmY([x, y]);
 
     obj.data[0].dataPoints.push({ x: coordenadas.x, y: coordenadas.y });
   }
 
-  setTimeout(function() {
+  setTimeout(function () {
     var chart = new CanvasJS.Chart("chartContainer", obj);
     chart.render();
   }, 500);
 });
 
-$(btnReflexaoOrigem).click(function() {
+$(btnReflexaoOrigem).click(function () {
 
   for (let { x, y } of matriz) {
     let coordenadas = reflexaoEmY([x, y]);
@@ -278,19 +292,18 @@ $(btnReflexaoOrigem).click(function() {
     obj.data[0].dataPoints.push({ x: coordenadas.x, y: coordenadas.y });
   }
 
-  setTimeout(function() {
+  setTimeout(function () {
     var chart = new CanvasJS.Chart("chartContainer", obj);
     chart.render();
   }, 500);
 });
 
-
-var canvas = document.getElementById("canvas");
-
-var ctx = canvas.getContext("2d");
+//Aqui, definimos o tamanho do canvas igual ao tamanho do plano
+canvas.width = $(plano).width();
+canvas.height = $(plano).height();
 
 function criarPlanoCartesiano() {
-  for (let k = 0; k <= canvas.width; k += 10) {
+  for (let k = 0; k <= canvas.width; k += 20) {
     let t = k * 2;
     ctx.beginPath();
     ctx.moveTo(0, t);
@@ -304,4 +317,5 @@ function criarPlanoCartesiano() {
     ctx.fill();
   }
 }
+
 criarPlanoCartesiano();
