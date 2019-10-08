@@ -4,14 +4,14 @@ var btnCisalhamento = document.getElementById("cisalhamento");
 var btnLimparPlano = document.getElementById("limpar-plano");
 var btnReflexaoEmY = document.getElementById("reflexao-em-y");
 var btnReflexaoOrigem = document.getElementById("reflexao-origem");
+var btnLimparGraficoExemplificacao = document.getElementById("limpar-grafico-exemplificacao");
 var plano = document.getElementById("coordiv");
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 
-
 //Criamos esta matriz para armazenar os pontos, quando se clica no plano,
 //automaticamente, é adicionado um elemento com as coordenadas x e y nesta matriz
-const matriz = [];
+var matriz = [];
 
 /**
  * Plugin usado somente para visualização do
@@ -21,21 +21,21 @@ var obj = {
   animationEnabled: true,
   zoomEnabled: true,
   title: {
-    text: "Exemplicação usando um Plugin para mostrar no Plano"
+    text: "Exemplicação usando um Plugin para mostrar no Plano",
   },
   axisX: {
-    title: "X"
+    title: "X",
   },
   axisY: {
-    title: "Y"
+    title: "Y",
   },
   data: [
     {
       type: "scatter",
       toolTipContent: "<b>X:</b>{x}<br/><b>Y:</b>{y}",
-      dataPoints: []
-    }
-  ]
+      dataPoints: [],
+    },
+  ],
 };
 
 //Para se trabalhar com pontos:
@@ -93,7 +93,7 @@ function rotacao(ponto, angulo) {
 
   let matrizRotacao = [
     [Math.cos(alfa), -Math.sin(alfa)],
-    [Math.sin(alfa), Math.cos(alfa)]
+    [Math.sin(alfa), Math.cos(alfa)],
   ];
 
   return projecaoDePonto(ponto, matrizRotacao);
@@ -147,7 +147,7 @@ function escalamento(ponto, a, b) {
 }
 
 //Aqui, ao clicar sobre o plano, um ponto é adicionado a ele.
-document.getElementById("coordiv").onclick = function (ev) {
+document.getElementById("coordiv").onclick = function(ev) {
   //Retira o último elemento da matriz:
   let letraPonto = alfabeto.pop();
 
@@ -155,7 +155,9 @@ document.getElementById("coordiv").onclick = function (ev) {
 
   let y = ev.offsetY;
 
-  let ponto = `<span style="position:absolute;left:${x}px; top:${y}px;font-size:12px;" class="ponto-plano"><span class="dot"></span> ${letraPonto} (${x},${y})</span><br/>`;
+  let ponto = `<div style="left:${x}px;top:${y}px;" title="(${x},${y})" class="ponto-plano">
+   <span class="dot"></span>
+  <span class="pontos" style="display:none;z-index:9999;position:absolute;top:7px;left:-10px;"><strong>${letraPonto}</strong>(${x},${y})</span></div>`;
 
   let objCoord = { x: x, y: y };
 
@@ -168,11 +170,9 @@ document.getElementById("coordiv").onclick = function (ev) {
   //$('#get-pontos').append("PONTO: ").append(`${letraPonto}[${x},${y}]<br/>`);
 };
 
-
 let buttonCalcular = document.getElementById("calcular");
 
-buttonCalcular.onclick = function () {
-
+buttonCalcular.onclick = function() {
   for (let { x, y } of matriz) {
     let coord = escalamento([x, y], 5, 5);
     console.log(coord);
@@ -181,8 +181,8 @@ buttonCalcular.onclick = function () {
 };
 
 //Quando soltar o mouse
-buttonCalcular.onmouseup = function () {
-  setTimeout(function () {
+buttonCalcular.onmouseup = function() {
+  setTimeout(function() {
     console.log(obj);
     var chart = new CanvasJS.Chart("chartContainer", obj);
     chart.render();
@@ -191,7 +191,7 @@ buttonCalcular.onmouseup = function () {
 
 let iniciar = false;
 
-document.getElementById("reduzir-aumentar").oninput = function () {
+document.getElementById("reduzir-aumentar").oninput = function() {
   let valor = this.value;
 
   for (let { x, y } of matriz) {
@@ -208,31 +208,33 @@ document.getElementById("reduzir-aumentar").oninput = function () {
   }
 };
 
-document.getElementById("reduzir-aumentar").onmouseup = function () {
+document.getElementById("reduzir-aumentar").onmouseup = function() {
   iniciar = true;
   var chart = new CanvasJS.Chart("chartContainer", obj);
   chart.render();
 };
 
 //Para rotação:
-btnNotacao.oninput = function () {
+btnNotacao.oninput = function() {
   let angulo = this.value;
-  console.log(angulo);
+
+  console.log(matriz);
+
   for (let { x, y } of matriz) {
     let coordenadas = rotacao([x, y], angulo);
     obj.data[0].dataPoints.push({ x: coordenadas.x, y: coordenadas.y });
   }
 };
 
-btnNotacao.onmouseup = function () {
-  setTimeout(function () {
+btnNotacao.onmouseup = function() {
+  setTimeout(function() {
     var chart = new CanvasJS.Chart("chartContainer", obj);
     chart.render();
   }, 1000); //Espera-se um atraso de 1 segundo(1000 milésimo).
 };
 
 //Para translação:
-btnTranslacao.onmouseup = function () {
+btnTranslacao.onmouseup = function() {
   let angulo = this.value;
   for (let { x, y } of matriz) {
     console.log(x, y);
@@ -240,14 +242,14 @@ btnTranslacao.onmouseup = function () {
     obj.data[0].dataPoints.push({ x: coordenadas.x, y: coordenadas.y });
   }
 
-  setTimeout(function () {
+  setTimeout(function() {
     var chart = new CanvasJS.Chart("chartContainer", obj);
     chart.render();
   }, 1000); //Espera-se um atraso de 1 segundo(1000 milésimo).
 };
 
 //btnCisalhamento:
-btnCisalhamento.onmouseup = function () {
+btnCisalhamento.onmouseup = function() {
   let valor = this.value;
 
   for (let { x, y } of matriz) {
@@ -256,43 +258,51 @@ btnCisalhamento.onmouseup = function () {
   }
 
   console.log(obj.data[0].dataPoints);
-  /*setTimeout(function() {
-    var chart = new CanvasJS.Chart("chartContainer", obj);
-    chart.render();
-  }, 1000); //Espera-se um atraso de 1 segundo(1000 milésimo).
-*/
 };
 
-$("#limpar-plano").click(function () {
-  $(".ponto-plano").remove();
-  matriz = null;
-  obj.data[0].dataPoints = null;
-  var chart = new CanvasJS.Chart("chartContainer", obj);
-  chart.render();
-});
+/**
+ * Limpas todas as informações.
+ */
+var resetCanvas = function() {
+  $("#chartContainer").remove(); // this is my <canvas> element
+  $("#graph-container").prepend(
+    '<div id="chartContainer" style="height: 370px; width: 100%;"></div>'
+  );
+  obj.data[0].dataPoints = [];
+};
 
-$("#reflexao-em-y").click(function () {
+$("#limpar-plano").click(function() {
+  $(".ponto-plano").remove();
+  matriz = [];
+  resetCanvas();
+});//<!-Fim
+
+
+$(btnLimparGraficoExemplificacao).click(function(){
+  resetCanvas();
+})
+
+$("#reflexao-em-y").click(function() {
   for (let { x, y } of matriz) {
     let coordenadas = reflexaoEmY([x, y]);
 
     obj.data[0].dataPoints.push({ x: coordenadas.x, y: coordenadas.y });
   }
 
-  setTimeout(function () {
+  setTimeout(function() {
     var chart = new CanvasJS.Chart("chartContainer", obj);
     chart.render();
   }, 500);
 });
 
-$(btnReflexaoOrigem).click(function () {
-
+$(btnReflexaoOrigem).click(function() {
   for (let { x, y } of matriz) {
     let coordenadas = reflexaoEmY([x, y]);
 
     obj.data[0].dataPoints.push({ x: coordenadas.x, y: coordenadas.y });
   }
 
-  setTimeout(function () {
+  setTimeout(function() {
     var chart = new CanvasJS.Chart("chartContainer", obj);
     chart.render();
   }, 500);
@@ -319,3 +329,18 @@ function criarPlanoCartesiano() {
 }
 
 criarPlanoCartesiano();
+
+//MOSTRAR E ESCONDER PONTOS NO PLANO
+let mostrarPontos = false;
+
+$("#mostrar-pontos").click(function() {
+  if (!mostrarPontos) {
+    mostrarPontos = true;
+    $(".pontos").show();
+    $(this).html("ESCONDER PONTOS");
+  } else {
+    mostrarPontos = false;
+    $(".pontos").hide();
+    $(this).html("MOSTRAR TEXTO DOS PONTOS");
+  }
+});
