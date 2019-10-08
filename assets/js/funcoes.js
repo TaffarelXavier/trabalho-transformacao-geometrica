@@ -283,3 +283,25 @@ $(btnReflexaoOrigem).click(function() {
     chart.render();
   }, 500);
 });
+
+
+var canvas = document.getElementById("canvas");
+
+var ctx = canvas.getContext("2d");
+
+function criarPlanoCartesiano() {
+  for (let k = 0; k <= canvas.width; k += 10) {
+    let t = k * 2;
+    ctx.beginPath();
+    ctx.moveTo(0, t);
+    ctx.lineTo(canvas.width, t);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(t, 0);
+    ctx.lineTo(t, canvas.width);
+    ctx.strokeStyle = "black";
+    ctx.stroke();
+    ctx.fill();
+  }
+}
+criarPlanoCartesiano();
