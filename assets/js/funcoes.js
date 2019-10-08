@@ -1,6 +1,9 @@
 let btnNotacao = document.getElementById("rotacao");
 let btnTranslacao = document.getElementById("translacao");
 let btnCisalhamento = document.getElementById("cisalhamento");
+let btnLimparPlano = document.getElementById("limpar-plano");
+let btnReflexaoEmY = document.getElementById("reflexao-em-y");
+let btnReflexaoOrigem = document.getElementById("reflexao-origem");
 
 /**
  * Configurações Iniciais do Chats
@@ -9,21 +12,21 @@ var obj = {
   animationEnabled: true,
   zoomEnabled: true,
   title: {
-    text: "Exemplicação usando um Plugin para mostrar no Plano",
+    text: "Exemplicação usando um Plugin para mostrar no Plano"
   },
   axisX: {
-    title: "X",
+    title: "X"
   },
   axisY: {
-    title: "Y",
+    title: "Y"
   },
   data: [
     {
       type: "scatter",
       toolTipContent: "<b>X:</b>{x}<br/><b>Y:</b>{y}",
-      dataPoints: [],
-    },
-  ],
+      dataPoints: []
+    }
+  ]
 };
 
 //Criei esta matriz para armazenar os pontos, quando se clica no plano
@@ -35,14 +38,27 @@ const alfabeto = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").reverse();
 /**
  * Obtém as coordenadas quando passamos o mouse sobre o plano
  */
-function cnvs_getCoordinates(e) {
-  x = e.clientX;
-  y = e.clientY;
+function cnvs_getCoordinates(ev) {
+  let x = ev.offsetX;
+
+  let y = ev.offsetY;
+
+  // ev.target.title = x + "," + y;
+
+  $("#get-coordenadas")
+    .html(`[${x},${y}]`)
+    .show()
+    .css({ top: y, left: x + 10 });
+
   document.title = "Coordenadas: (" + x + "," + y + ")";
 }
 
+//Ao tirar o mouse de cima do plano
 function cnvs_clearCoordinates() {
   document.title = "Matrizes de Transformação Geométrica";
+  $("#get-coordenadas")
+    .html("")
+    .hide();
 }
 
 //Pega uma matriz de ponto, por exemplo: x e y
@@ -68,7 +84,7 @@ function rotacao(ponto, angulo) {
 
   let matrizRotacao = [
     [Math.cos(alfa), -Math.sin(alfa)],
-    [Math.sin(alfa), Math.cos(alfa)],
+    [Math.sin(alfa), Math.cos(alfa)]
   ];
 
   return projecaoDePonto(ponto, matrizRotacao);
@@ -129,7 +145,7 @@ document.getElementById("coordiv").onclick = function(ev) {
 
   let y = ev.offsetY;
 
-  let ponto = `<span style="position:absolute;left:${x}px; top:${y}px;font-size:12px;"><span class="dot"></span> ${letraPonto} (${x},${y})</span><br/>`;
+  let ponto = `<span style="position:absolute;left:${x}px; top:${y}px;font-size:12px;" class="ponto-plano"><span class="dot"></span> ${letraPonto} (${x},${y})</span><br/>`;
 
   let objCoord = { x: x, y: y };
 
@@ -216,22 +232,54 @@ btnTranslacao.onmouseup = function() {
   }, 1000); //Espera-se um atraso de 1 segundo(1000 milésimo).
 };
 
-//btnCisalhamento: 
+//btnCisalhamento:
 btnCisalhamento.onmouseup = function() {
   let valor = this.value;
 
-
   for (let { x, y } of matriz) {
-    
     let coordenadas = cisalhamento([x, y], parseInt(valor));
     obj.data[0].dataPoints.push({ x: coordenadas.x, y: coordenadas.y });
   }
 
-
-  console.log( obj.data[0].dataPoints);
+  console.log(obj.data[0].dataPoints);
   /*setTimeout(function() {
     var chart = new CanvasJS.Chart("chartContainer", obj);
     chart.render();
   }, 1000); //Espera-se um atraso de 1 segundo(1000 milésimo).
 */
 };
+
+$("#limpar-plano").click(function() {
+  $(".ponto-plano").remove();
+  matriz = null;
+  obj.data[0].dataPoints = null;
+  var chart = new CanvasJS.Chart("chartContainer", obj);
+  chart.render();
+});
+
+$("#reflexao-em-y").click(function() {
+  for (let { x, y } of matriz) {
+    let coordenadas = reflexaoEmY([x, y]);
+
+    obj.data[0].dataPoints.push({ x: coordenadas.x, y: coordenadas.y });
+  }
+
+  setTimeout(function() {
+    var chart = new CanvasJS.Chart("chartContainer", obj);
+    chart.render();
+  }, 500);
+});
+
+$(btnReflexaoOrigem).click(function() {
+  alert('Teste');
+  for (let { x, y } of matriz) {
+    let coordenadas = reflexaoEmY([x, y]);
+
+    obj.data[0].dataPoints.push({ x: coordenadas.x, y: coordenadas.y });
+  }
+
+  setTimeout(function() {
+    var chart = new CanvasJS.Chart("chartContainer", obj);
+    chart.render();
+  }, 500);
+});
