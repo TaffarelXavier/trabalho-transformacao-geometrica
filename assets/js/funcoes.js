@@ -271,7 +271,7 @@ $("#reflexao-em-y").click(function() {
 });
 
 $(btnReflexaoOrigem).click(function() {
-  alert('Teste');
+
   for (let { x, y } of matriz) {
     let coordenadas = reflexaoEmY([x, y]);
 

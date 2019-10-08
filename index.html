@@ -12,11 +12,11 @@
     />
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/4.0.2/bootstrap-material-design.min.css"
+      href="assets/css/bootstrap-material-design.min.css"
     />
     <link rel="stylesheet" href="assets/css/estilizacao.css" />
     <link rel="stylesheet" href="assets/css/dracula.min.css" />
-    <link rel="stylesheet" href="assets/css/github.min.css" />
+    <!-- <link rel="stylesheet" href="assets/css/github.min.css" /> -->
   </head>
   <body>
     <div class="container-fluid">
@@ -34,7 +34,7 @@
               <p>
                 <strong
                   >PLANO QUALQUER:<sup
-                    ><mark>Clique sobre o plano</mark></sup
+                    ><mark>Clique sobre o plano para criar pontos</mark></sup
                   ></strong
                 >
               </p>
@@ -47,7 +47,9 @@
             <span id="get-coordenadas" style="position: absolute;"></span>
             </div>
             <div class="row">
-              <button id="limpar-plano">LIMPAR PLANO</button>
+              <div class="col-md-12">
+                  <button id="limpar-plano" class="btn-success">LIMPAR PLANO</button>
+              </div>
             </div>
             </div>
           </div>
@@ -69,12 +71,11 @@
               <legend>ROTAÇÃO</legend>
               <input
                 type="range"
-                min="-100"
-                max="100"
+                min="0"
+                max="360"
                 id="rotacao"
-                list="tickmarks"
               />
-              <datalist id="tickmarks">
+              <!-- <datalist id="tickmarks">
                 <option value="0"> </option>
                 <option value="-100"> </option>
                 <option value="-90"> </option>
@@ -96,7 +97,7 @@
                 <option value="80"> </option>
                 <option value="90"> </option>
                 <option value="100"> </option>
-              </datalist>
+              </datalist> -->
               <!--REFERÊNCIA: https://developer.mozilla.org/pt-BR/docs/Web/HTML/Element/Input/range-->
             </fieldset>
             <fieldset>
@@ -121,19 +122,19 @@
             </fieldset>
             <fieldset>
               <legend>REFLEXÃO EM X</legend>
-              <button id="calcular">Aplicar</button>
+              <button id="calcular" class="btn-success">Aplicar</button>
             </fieldset>
             <fieldset>
               <legend>REFLEXÃO EM Y</legend>
-              <button id="reflexao-em-y">Aplicar</button>              
+              <button id="reflexao-em-y" class="btn-success">Aplicar</button>              
             </fieldset>
             <fieldset>
               <legend>REFLEXÃO ORIGEM</legend>
-              <button id="reflexao-origem">Aplicar</button>
+              <button id="reflexao-origem" class="btn-success">Aplicar</button>
             </fieldset>
             <fieldset>
               <legend>REDUZIR/AUMENTAR</legend>
-              <input type="range" id="reduzir-aumentar" />
+              <input type="range" id="reduzir-aumentar" class="btn btn-success" />
             </fieldset>
           </div>
         </div><!--FINAL SEGUNDA COLUNA-->
