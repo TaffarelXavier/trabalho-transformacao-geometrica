@@ -1,4 +1,4 @@
 git add .
-git commit -m "Alterações"
+git commit -m "AlteraÃ§Ãµes"
 git push origin master
 cd
