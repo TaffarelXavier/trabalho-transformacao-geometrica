@@ -9,8 +9,8 @@ var plano = document.getElementById("coordiv");
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 
-//Criamos esta matriz para armazenar os pontos, quando se clica no plano,
-//automaticamente, é adicionado um elemento com as coordenadas x e y nesta matriz
+// Criamos esta matriz para armazenar os pontos, quando se clica no plano,
+// automaticamente, é adicionado um elemento com as coordenadas x e y nesta matriz
 var matriz = [];
 
 /**
@@ -86,9 +86,9 @@ function projecaoDePonto(ponto, _matriz) {
 Matriz de rotação
 **/
 function rotacao(ponto, angulo) {
-  //A conversão é necessária,
-  //pois a saída das as funções cos e sin de javascript
-  //retorna o dado em radianos
+  // A conversão é necessária,
+  // pois a saída das as funções cos e sin de javascript
+  // retorna o dado em radianos
   let alfa = (angulo * Math.PI) / 180;
 
   let matrizRotacao = [
@@ -147,7 +147,7 @@ function escalamento(ponto, a, b) {
 }
 
 //Aqui, ao clicar sobre o plano, um ponto é adicionado a ele.
-document.getElementById("coordiv").onclick = function(ev) {
+document.getElementById("coordiv").onclick = function (ev) {
   //Retira o último elemento da matriz:
   let letraPonto = alfabeto.pop();
 
@@ -172,7 +172,7 @@ document.getElementById("coordiv").onclick = function(ev) {
 
 let buttonCalcular = document.getElementById("calcular");
 
-buttonCalcular.onclick = function() {
+buttonCalcular.onclick = function () {
   for (let { x, y } of matriz) {
     let coord = escalamento([x, y], 5, 5);
     console.log(coord);
@@ -181,8 +181,8 @@ buttonCalcular.onclick = function() {
 };
 
 //Quando soltar o mouse
-buttonCalcular.onmouseup = function() {
-  setTimeout(function() {
+buttonCalcular.onmouseup = function () {
+  setTimeout(function () {
     console.log(obj);
     var chart = new CanvasJS.Chart("chartContainer", obj);
     chart.render();
@@ -191,31 +191,24 @@ buttonCalcular.onmouseup = function() {
 
 let iniciar = false;
 
-document.getElementById("reduzir-aumentar").oninput = function() {
+document.getElementById("reduzir-aumentar").oninput = function () {
   let valor = this.value;
 
   for (let { x, y } of matriz) {
     let data = reflexaoEmX([x, y]);
 
     obj.data[0].dataPoints.push({ x: data.x, y: data.y });
-
-    /*console.log(escalamento([x, y], 3, 3));
-                console.log(reflexaoEmX([x, y]));
-                console.log(reflexaoEmY([x, y]));
-                console.log(reflexaoOrigem([x, y]));
-                console.log(efeitoCisalhamento([x, y], 2));
-                ;*/
   }
 };
 
-document.getElementById("reduzir-aumentar").onmouseup = function() {
+document.getElementById("reduzir-aumentar").onmouseup = function () {
   iniciar = true;
   var chart = new CanvasJS.Chart("chartContainer", obj);
   chart.render();
 };
 
 //Para rotação:
-btnNotacao.oninput = function() {
+btnNotacao.oninput = function () {
   let angulo = this.value;
 
   console.log(matriz);
@@ -226,15 +219,15 @@ btnNotacao.oninput = function() {
   }
 };
 
-btnNotacao.onmouseup = function() {
-  setTimeout(function() {
+btnNotacao.onmouseup = function () {
+  setTimeout(function () {
     var chart = new CanvasJS.Chart("chartContainer", obj);
     chart.render();
   }, 1000); //Espera-se um atraso de 1 segundo(1000 milésimo).
 };
 
 //Para translação:
-btnTranslacao.onmouseup = function() {
+btnTranslacao.onmouseup = function () {
   let angulo = this.value;
   for (let { x, y } of matriz) {
     console.log(x, y);
@@ -242,14 +235,14 @@ btnTranslacao.onmouseup = function() {
     obj.data[0].dataPoints.push({ x: coordenadas.x, y: coordenadas.y });
   }
 
-  setTimeout(function() {
+  setTimeout(function () {
     var chart = new CanvasJS.Chart("chartContainer", obj);
     chart.render();
   }, 1000); //Espera-se um atraso de 1 segundo(1000 milésimo).
 };
 
 //btnCisalhamento:
-btnCisalhamento.onmouseup = function() {
+btnCisalhamento.onmouseup = function () {
   let valor = this.value;
 
   for (let { x, y } of matriz) {
@@ -263,7 +256,7 @@ btnCisalhamento.onmouseup = function() {
 /**
  * Limpas todas as informações.
  */
-var resetCanvas = function() {
+var resetCanvas = function () {
   $("#chartContainer").remove(); // this is my <canvas> element
   $("#graph-container").prepend(
     '<div id="chartContainer" style="height: 370px; width: 100%;"></div>'
@@ -271,38 +264,38 @@ var resetCanvas = function() {
   obj.data[0].dataPoints = [];
 };
 
-$("#limpar-plano").click(function() {
+$("#limpar-plano").click(function () {
   $(".ponto-plano").remove();
   matriz = [];
   resetCanvas();
 });//<!-Fim
 
 
-$(btnLimparGraficoExemplificacao).click(function(){
+$(btnLimparGraficoExemplificacao).click(function () {
   resetCanvas();
 })
 
-$("#reflexao-em-y").click(function() {
+$("#reflexao-em-y").click(function () {
   for (let { x, y } of matriz) {
     let coordenadas = reflexaoEmY([x, y]);
 
     obj.data[0].dataPoints.push({ x: coordenadas.x, y: coordenadas.y });
   }
 
-  setTimeout(function() {
+  setTimeout(function () {
     var chart = new CanvasJS.Chart("chartContainer", obj);
     chart.render();
   }, 500);
 });
 
-$(btnReflexaoOrigem).click(function() {
+$(btnReflexaoOrigem).click(function () {
   for (let { x, y } of matriz) {
     let coordenadas = reflexaoEmY([x, y]);
 
     obj.data[0].dataPoints.push({ x: coordenadas.x, y: coordenadas.y });
   }
 
-  setTimeout(function() {
+  setTimeout(function () {
     var chart = new CanvasJS.Chart("chartContainer", obj);
     chart.render();
   }, 500);
@@ -333,7 +326,7 @@ criarPlanoCartesiano();
 //MOSTRAR E ESCONDER PONTOS NO PLANO
 let mostrarPontos = false;
 
-$("#mostrar-pontos").click(function() {
+$("#mostrar-pontos").click(function () {
   if (!mostrarPontos) {
     mostrarPontos = true;
     $(".pontos").show();

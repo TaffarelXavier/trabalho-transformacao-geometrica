@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <title>Cool Canvas Page</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@200;300&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Nunito Sans', sans-serif;
+            text-transform: uppercase;
+        }
+
+        canvas {
+            border: 1px solid #ccc;
+
+        }
+
+        .main {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .controles-container {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .input {
+            text-align: center;
+            border-left: 1px solid #ccc;
+            border-top: 1px solid #ccc;
+        }
+
+        .end {
+            border-right: 1px solid #ccc;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main">
+        <div class="controles-container">
+            <div class="input">
+                TRANSLAÇÃO<br>
+                <input type="range" name="" step=1 min=0 max=550 id="transladar" value=0>
+            </div>
+            <div class="input">
+                ROTAÇÃO<br>
+                <input type="range" name="" step=1 min=0 max=8 id="rotacao" value=0>
+            </div>
+            <div class="input">
+                Reflexão<br>
+                <input type="range" name="" step=1 min=0 max=1 id="reflexao" value=0>
+            </div>
+            <div class="input">
+                Escala<br>
+                <input type="range" name="" step=1 min=1 max=11 id="escalar" value=0>
+            </div>
+            <div class="input end">
+                Cisalhamento<br>
+                <input type="range" name="" step=0.001 min=0 max=550 id="range3" value=0>
+            </div>
+        </div>
+
+
+        <canvas id='thecanvas' width='600' height='580'>
+            Se você vir isso, significa que seu navegador não oferece suporte
+            os novos elementos de tela HTML5 legais. Rapaz, é <em> você </em>
+            perdendo! Você pode querer atualizar.
+        </canvas>
+    </div>
+
+    <script>
+        var canvas = document.getElementById("thecanvas");
+        var ctx = canvas.getContext("2d");
+        const matriz = [[0, 25], [50, 50], [50, 0]]; // Pontos iniciais (coordenadas x e y) do trinângulo no canvas.
+
+        if (canvas) {
+            if (ctx) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.beginPath();
+                ctx.moveTo(0, 25);
+                ctx.lineTo(50, 50);
+                ctx.lineTo(50, 0);
+                ctx.fill();
+            } else {
+                alert("Sem contexto!");
+            }
+        } else {
+            alert("O navegador não pode renderizar o canvas");
+        }
+
+        document.getElementById("transladar").oninput = function ({ target }) {
+
+            let value = parseInt(target.value, 10);
+            let m = [...matriz]; // CLONA A MATRIZ
+
+            m = m.map((el, iii) => {
+                return [el[0] + value, el[1]]
+            })
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.beginPath();
+            ctx.moveTo(m[0][0], m[0][1]);
+            ctx.lineTo(m[1][0], m[1][1]);
+            ctx.lineTo(m[2][0], m[2][1]);
+            ctx.fill();
+        }
+
+        document.getElementById("escalar").oninput = function ({ target }) {
+
+            let value = parseFloat(target.value);
+
+            let m = [...matriz]; // CLONA A MATRIZ
+
+            m = m.map((el, iii) => {
+                return [el[0] * value, el[1] * value] // 
+            })
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.beginPath();
+            ctx.moveTo(m[0][0], m[0][1]);
+            ctx.lineTo(m[1][0], m[1][1]);
+            ctx.lineTo(m[2][0], m[2][1]);
+            ctx.fill();
+        }
+
+        document.getElementById("reflexao").oninput = function ({ target }) {
+
+            let value = parseFloat(target.value);
+
+            let m = [...matriz]; // CLONA A MATRIZ
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.beginPath();
+            ctx.moveTo(m[0][0] + (value * 100), m[0][1]);
+            ctx.lineTo(m[1][0], m[1][1]);
+            ctx.lineTo(m[2][0], m[2][1]);
+            ctx.fill();
+        }
+
+        document.getElementById("rotacao").oninput = function ({ target }) {
+            let value = parseFloat(target.value);
+
+            let alfa = ((value * 45) * Math.PI) / 180;
+
+            /*let matrizRotacao = [
+                [Math.cos(alfa), -Math.sin(alfa)],
+                [Math.sin(alfa), Math.cos(alfa)],
+            ];*/
+
+            let m = [...matriz]; // CLONA A MATRIZ
+            
+            console.log(m);
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.beginPath();
+            ctx.rotate((45) * Math.PI / 180)
+            ctx.moveTo(m[0][0], m[0][1]);
+            ctx.lineTo(m[1][0], m[1][1]);
+            ctx.lineTo(m[2][0], m[2][1]);
+            ctx.fill();
+        }
+    </script>
+</body>
+
+</html>
