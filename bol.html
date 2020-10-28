@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+
+<head>
+    <!-- <link rel="stylesheet" type="text/css" media="all" href="css/reset.css" /> -->
+    <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+
+    <style>
+        body {
+            background-color: ivory;
+        }
+
+        canvas {
+            border: 1px solid red;
+        }
+    </style>
+
+    <script>
+        $(function () {
+
+            function Ball(radius, color) {
+                this.radius = radius || 25;
+                this.color = color || "#" + (Math.random() * 0xFFFFFF << 0).toString(16);
+                this.startingX;
+                this.startingY;
+                this.x = 0;
+                this.y = 0;
+                this.rotation = 0;
+            }
+
+
+            Ball.prototype.draw = function (context) {
+                context.save();
+                context.fillStyle = this.color;
+                context.beginPath();
+                context.arc(this.x, this.y, this.radius, 0, Math.PI * 2)
+                context.fill();
+                context.restore();
+            };
+
+            var canvas = document.getElementById("canvas"),
+                log = document.getElementById("log"),
+                context = canvas.getContext("2d"),
+                w = canvas.width,
+                h = canvas.height,
+                ball = new Ball(),
+                angle = 3 * Math.PI / 180,
+                cx = w / 2,
+                cy = h / 2;
+
+            ball.startingX = cx;
+            ball.startingY = cy - 60;
+            let i = 100;
+
+            (function keepDrawing() {
+
+                context.clearRect(0, 0, w, h);
+                i = i - 5;
+                if (i == 1) {
+                    id = 100;
+                }
+                // increase the angle of rotation
+                angle += i * Math.PI / 180;
+
+                // calculate the new ball.x / ball.y
+                var x1 = ball.startingX - cx;
+                var y1 = ball.startingY - cy;
+                ball.x = cx + x1 * Math.cos(angle) - y1 * Math.sin(angle);
+                ball.y = cy + y1 * Math.cos(angle) + x1 * Math.sin(angle);
+                ball.draw(context);
+
+                setTimeout(keepDrawing, 10)
+            }());
+
+        });
+    </script>
+
+</head>
+
+<body>
+    <canvas id="canvas" width=300 height=300></canvas>
+</body>
+
+</html>
